@@ -31,7 +31,7 @@ interface RoadmapEntry {
   title: string;
   description: string;
   skill_tag: string;
-  status: 'completed' | 'in-progress' | 'planned';
+  status: string;
   start_date: string;
   end_date?: string;
 }
