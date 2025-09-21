@@ -7,10 +7,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import AuthModal from "@/components/AuthModal";
 import UploadForm from "@/components/UploadForm";
 import ProfileForm from "@/components/ProfileForm";
-import Roadmap from "@/pages/Roadmap";
+import PersonalizedRoadmap from "@/pages/PersonalizedRoadmap";
+import Courses from "@/pages/Courses";
+import Analysis from "@/pages/Analysis";
+import Community from "@/pages/Community";
 import { 
   Upload, 
   Target, 
@@ -106,7 +110,7 @@ const Index = () => {
                 onClick={() => handleSectionChange("home")}
                 className="text-foreground hover:text-primary transition-colors"
               >
-                Features
+                Home
               </button>
               <button 
                 onClick={() => handleSectionChange("courses")}
@@ -135,6 +139,8 @@ const Index = () => {
                 </button>
               )}
             </nav>
+
+            <ThemeToggle />
 
             {user ? (
               <DropdownMenu>
@@ -178,7 +184,7 @@ const Index = () => {
                   onClick={() => handleSectionChange("home")}
                   className="block text-foreground hover:text-primary transition-colors w-full text-left"
                 >
-                  Features
+                  Home
                 </button>
                 <button 
                   onClick={() => handleSectionChange("courses")}
@@ -394,23 +400,42 @@ const Index = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3].map((i) => (
-            <Card key={i} className="bg-white/5 border-white/10">
+          {[
+            {
+              name: 'Sarah Chen',
+              content: 'Just completed Python for Data Science! Added to my resume 🎉',
+              time: '2 hours ago',
+              likes: 12
+            },
+            {
+              name: 'Michael Rodriguez', 
+              content: 'VertexPath helped me transition from marketing to UX design. Got my dream job!',
+              time: '1 day ago',
+              likes: 28
+            },
+            {
+              name: 'Emily Johnson',
+              content: 'The AWS certification path was perfect. Passed on first try thanks to the structured learning!',
+              time: '3 days ago', 
+              likes: 19
+            }
+          ].map((review, i) => (
+            <Card key={i} className="bg-white/5 border-white/10 dark:bg-white/5 dark:border-white/10">
               <CardContent className="p-6">
                 <div className="flex items-start space-x-3">
                   <div className="w-10 h-10 bg-gradient-primary rounded-full flex items-center justify-center">
                     <User className="h-5 w-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-medium text-white">Sarah Chen</h4>
-                    <p className="text-sm text-gray-300 mt-1">
-                      Just completed Python for Data Science! Added to my resume 🎉
+                    <h4 className="font-medium text-white dark:text-white">{review.name}</h4>
+                    <p className="text-sm text-gray-300 dark:text-gray-300 mt-1">
+                      {review.content}
                     </p>
-                    <div className="flex items-center mt-2 space-x-4 text-xs text-gray-400">
-                      <span>2 hours ago</span>
+                    <div className="flex items-center mt-2 space-x-4 text-xs text-gray-400 dark:text-gray-400">
+                      <span>{review.time}</span>
                       <span className="flex items-center gap-1">
                         <Star className="h-3 w-3" />
-                        12 likes
+                        {review.likes} likes
                       </span>
                     </div>
                   </div>
@@ -456,43 +481,43 @@ const Index = () => {
 
   // Footer
   const Footer = () => (
-    <footer className="bg-gradient-dark border-t border-white/10">
+    <footer className="bg-gradient-dark border-t border-white/10 dark:bg-gradient-dark dark:border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="font-semibold text-white mb-4">Product</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>Features</li>
-              <li>Pricing</li>
-              <li>API</li>
+            <h3 className="font-semibold text-white dark:text-white mb-4">Product</h3>
+            <ul className="space-y-2 text-gray-300 dark:text-gray-300">
+              <li><button onClick={() => handleSectionChange("home")} className="hover:text-primary transition-colors">Features</button></li>
+              <li><button onClick={() => window.open('#pricing', '_self')} className="hover:text-primary transition-colors">Pricing</button></li>
+              <li><button onClick={() => window.open('#api', '_self')} className="hover:text-primary transition-colors">API</button></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-white mb-4">Company</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>About</li>
-              <li>Careers</li>
-              <li>Blog</li>
+            <h3 className="font-semibold text-white dark:text-white mb-4">Company</h3>
+            <ul className="space-y-2 text-gray-300 dark:text-gray-300">
+              <li><button onClick={() => window.open('#about', '_self')} className="hover:text-primary transition-colors">About</button></li>
+              <li><button onClick={() => window.open('#careers', '_self')} className="hover:text-primary transition-colors">Careers</button></li>
+              <li><button onClick={() => window.open('#blog', '_self')} className="hover:text-primary transition-colors">Blog</button></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-white mb-4">Resources</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>Documentation</li>
-              <li>Help Center</li>
-              <li>Community</li>
+            <h3 className="font-semibold text-white dark:text-white mb-4">Resources</h3>
+            <ul className="space-y-2 text-gray-300 dark:text-gray-300">
+              <li><button onClick={() => window.open('#docs', '_self')} className="hover:text-primary transition-colors">Documentation</button></li>
+              <li><button onClick={() => window.open('#help', '_self')} className="hover:text-primary transition-colors">Help Center</button></li>
+              <li><button onClick={() => handleSectionChange("community")} className="hover:text-primary transition-colors">Community</button></li>
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold text-white mb-4">Legal</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>Privacy</li>
-              <li>Terms</li>
-              <li>Security</li>
+            <h3 className="font-semibold text-white dark:text-white mb-4">Legal</h3>
+            <ul className="space-y-2 text-gray-300 dark:text-gray-300">
+              <li><button onClick={() => window.open('#privacy', '_self')} className="hover:text-primary transition-colors">Privacy</button></li>
+              <li><button onClick={() => window.open('#terms', '_self')} className="hover:text-primary transition-colors">Terms</button></li>
+              <li><button onClick={() => window.open('#security', '_self')} className="hover:text-primary transition-colors">Security</button></li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-white/10 mt-12 pt-8 text-center text-gray-400">
+        <div className="border-t border-white/10 mt-12 pt-8 text-center text-gray-400 dark:text-gray-400">
           <p>&copy; 2024 VertexPath. All rights reserved.</p>
         </div>
       </div>
@@ -544,40 +569,13 @@ const Index = () => {
       case "profile":
         return <ProfileForm />;
       case "roadmap":
-        return <Roadmap />;
+        return <PersonalizedRoadmap />;
       case "analysis":
-        return user ? (
-          <section className="min-h-screen bg-gradient-dark pt-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-              <h1 className="text-3xl font-bold text-white mb-8">Skill Analysis</h1>
-              {/* Analysis content here */}
-            </div>
-          </section>
-        ) : (
-          <AuthRequiredMessage section="analysis" />
-        );
+        return <Analysis />;
       case "courses":
-        return user ? (
-          <section className="min-h-screen bg-gradient-dark pt-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-              <h1 className="text-3xl font-bold text-white mb-8">Course Recommendations</h1>
-              {/* Courses content here */}
-            </div>
-          </section>
-        ) : (
-          <AuthRequiredMessage section="courses" />
-        );
+        return <Courses />;
       case "community":
-        return user ? (
-          <section className="min-h-screen bg-gradient-dark pt-16">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-              <h1 className="text-3xl font-bold text-white mb-8">Learning Community</h1>
-              {/* Community content here */}
-            </div>
-          </section>
-        ) : (
-          <AuthRequiredMessage section="community" />
-        );
+        return <Community />;
       case "home":
       default:
         return (
@@ -594,7 +592,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-dark">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 dark:bg-gradient-dark">
       <Navigation />
       {renderCurrentSection()}
       
