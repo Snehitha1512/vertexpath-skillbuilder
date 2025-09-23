@@ -5,10 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import { Upload, User, Loader2 } from "lucide-react";
+import { Upload, User, Loader2, X } from "lucide-react";
 
 interface ProfileData {
   full_name: string;
@@ -21,7 +22,7 @@ interface ProfileData {
   target_job: string;
   experience_years: string;
   industry: string;
-  skills: string;
+  skills: string[];
   location: string;
   availability: string;
   salary_expectation: string;
@@ -40,7 +41,7 @@ const ProfileForm: React.FC = () => {
     target_job: '',
     experience_years: '',
     industry: '',
-    skills: '',
+    skills: [],
     location: '',
     availability: '',
     salary_expectation: '',
@@ -49,19 +50,22 @@ const ProfileForm: React.FC = () => {
   const [avatarUrl, setAvatarUrl] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
   const [profileCompletion, setProfileCompletion] = useState(0);
+  const [skillInput, setSkillInput] = useState('');
 
   // Calculate profile completion percentage
   useEffect(() => {
     const requiredFields = ['full_name', 'current_status', 'education_level', 'target_job'];
     const optionalFields = ['education_detail', 'college_or_company', 'gender', 'dob', 'location'];
     
-    const completedRequired = requiredFields.filter(field => 
-      formData[field as keyof ProfileData]?.trim() !== ''
-    ).length;
+    const completedRequired = requiredFields.filter(field => {
+      const value = formData[field as keyof ProfileData];
+      return typeof value === 'string' ? value.trim() !== '' : Array.isArray(value) ? value.length > 0 : false;
+    }).length;
     
-    const completedOptional = optionalFields.filter(field => 
-      formData[field as keyof ProfileData]?.trim() !== ''
-    ).length;
+    const completedOptional = optionalFields.filter(field => {
+      const value = formData[field as keyof ProfileData];
+      return typeof value === 'string' ? value.trim() !== '' : Array.isArray(value) ? value.length > 0 : false;
+    }).length;
 
     const completion = ((completedRequired / requiredFields.length) * 60) + 
                      ((completedOptional / optionalFields.length) * 40);
@@ -97,7 +101,7 @@ const ProfileForm: React.FC = () => {
         target_job: data.target_job || '',
         experience_years: data.experience_years || '',
         industry: data.industry || '',
-        skills: data.skills || '',
+        skills: data.skills ? data.skills.split(',').map(s => s.trim()).filter(s => s) : [],
         location: data.location || '',
         availability: data.availability || '',
         salary_expectation: data.salary_expectation || '',
@@ -143,6 +147,7 @@ const ProfileForm: React.FC = () => {
         .upsert({
           id: user.id,
           ...formData,
+          skills: formData.skills.join(', '),
           avatar_url: newAvatarUrl,
         });
 
@@ -181,6 +186,27 @@ const ProfileForm: React.FC = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleSkillAdd = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && skillInput.trim()) {
+      e.preventDefault();
+      const trimmedSkill = skillInput.trim();
+      if (!formData.skills.includes(trimmedSkill)) {
+        setFormData(prev => ({
+          ...prev,
+          skills: [...prev.skills, trimmedSkill]
+        }));
+      }
+      setSkillInput('');
+    }
+  };
+
+  const handleSkillRemove = (skillToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }));
   };
 
   return (
@@ -410,11 +436,30 @@ const ProfileForm: React.FC = () => {
                 <Label htmlFor="skills" className="text-white">Current Skills</Label>
                 <Input
                   id="skills"
-                  value={formData.skills}
-                  onChange={(e) => handleInputChange('skills', e.target.value)}
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  onKeyDown={handleSkillAdd}
                   className="bg-white/5 border-white/20 text-white"
-                  placeholder="e.g., JavaScript, Python, React, SQL (comma separated)"
+                  placeholder="Type a skill and press Enter to add"
                 />
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {formData.skills.map((skill, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="bg-primary/20 text-white border-primary/30 hover:bg-primary/30"
+                    >
+                      {skill}
+                      <button
+                        type="button"
+                        onClick={() => handleSkillRemove(skill)}
+                        className="ml-2 hover:text-destructive"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
               </div>
 
               {/* Submit Buttons */}
