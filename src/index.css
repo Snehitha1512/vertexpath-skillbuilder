@@ -8,14 +8,14 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light mode - sea green theme with better contrast */
-    --background: 158 45% 20%;
+    /* Light mode - darker sea green theme with better contrast */
+    --background: 158 60% 15%;
     --foreground: 180 50% 95%;
     
-    /* Custom gradients for VertexPath Light Mode */
+    /* Custom gradients for VertexPath Light Mode - darker sea green */
     --gradient-primary: linear-gradient(135deg, hsl(180, 85%, 45%) 0%, hsl(160, 70%, 50%) 100%);
-    --gradient-dark: linear-gradient(135deg, hsl(180, 25%, 88%) 0%, hsl(160, 35%, 92%) 100%);
-    --gradient-section: linear-gradient(135deg, hsl(180, 40%, 95%) 0%, hsl(160, 25%, 93%) 100%);
+    --gradient-dark: linear-gradient(135deg, hsl(158, 50%, 18%) 0%, hsl(160, 45%, 22%) 100%);
+    --gradient-section: linear-gradient(135deg, hsl(158, 55%, 16%) 0%, hsl(160, 50%, 20%) 100%);
 
     --card: 158 35% 25%;
     --card-foreground: 180 50% 95%;
