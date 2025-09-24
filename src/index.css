@@ -8,39 +8,39 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light mode - greenish-blue theme with better visibility */
-    --background: 190 45% 85%;
-    --foreground: 190 60% 15%;
+    /* Light mode - soft blues and greens theme */
+    --background: 210 40% 98%;
+    --foreground: 220 39% 11%;
     
-    /* Custom gradients for VertexPath Light Mode - greenish-blue */
-    --gradient-primary: linear-gradient(135deg, hsl(185, 85%, 45%) 0%, hsl(195, 70%, 50%) 100%);
-    --gradient-dark: linear-gradient(135deg, hsl(190, 40%, 80%) 0%, hsl(195, 35%, 75%) 100%);
-    --gradient-section: linear-gradient(135deg, hsl(190, 45%, 88%) 0%, hsl(195, 40%, 82%) 100%);
+    /* Custom gradients for VertexPath Light Mode - soft blues and greens */
+    --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(158, 84%, 39%) 100%);
+    --gradient-dark: linear-gradient(135deg, hsl(210, 40%, 94%) 0%, hsl(158, 25%, 90%) 100%);
+    --gradient-section: linear-gradient(135deg, hsl(210, 40%, 96%) 0%, hsl(158, 30%, 92%) 100%);
 
-    --card: 190 35% 75%;
-    --card-foreground: 190 60% 15%;
+    --card: 210 40% 96%;
+    --card-foreground: 220 39% 11%;
 
-    --popover: 190 35% 75%;
-    --popover-foreground: 190 60% 15%;
+    --popover: 210 40% 96%;
+    --popover-foreground: 220 39% 11%;
 
-    --primary: 185 85% 45%;
-    --primary-foreground: 190 45% 95%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 190 30% 70%;
-    --secondary-foreground: 190 60% 15%;
+    --secondary: 210 30% 90%;
+    --secondary-foreground: 220 39% 11%;
 
-    --muted: 190 25% 65%;
-    --muted-foreground: 190 60% 25%;
+    --muted: 210 25% 88%;
+    --muted-foreground: 220 39% 45%;
 
-    --accent: 190 30% 70%;
-    --accent-foreground: 190 60% 15%;
+    --accent: 158 84% 39%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 190 45% 95%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 190 20% 60%;
-    --input: 190 25% 70%;
-    --ring: 185 85% 45%;
+    --border: 210 20% 82%;
+    --input: 210 30% 92%;
+    --ring: 217 91% 60%;
 
     --radius: 0.5rem;
 
