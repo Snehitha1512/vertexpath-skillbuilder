@@ -8,9 +8,9 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light mode - ocean color theme (blue-green mix) */
+    /* Light mode - ocean color theme (blue-green mix) with black text */
     --background: 185 45% 88%;
-    --foreground: 185 60% 15%;
+    --foreground: 0 0% 9%;
     
     /* Custom gradients for VertexPath Light Mode - ocean colors */
     --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(158, 84%, 39%) 100%);
@@ -18,19 +18,19 @@ All colors MUST be HSL.
     --gradient-section: linear-gradient(135deg, hsl(185, 45%, 90%) 0%, hsl(190, 40%, 85%) 100%);
 
     --card: 185 35% 82%;
-    --card-foreground: 185 60% 15%;
+    --card-foreground: 0 0% 9%;
 
     --popover: 185 35% 82%;
-    --popover-foreground: 185 60% 15%;
+    --popover-foreground: 0 0% 9%;
 
     --primary: 217 91% 60%;
     --primary-foreground: 185 45% 95%;
 
     --secondary: 185 30% 78%;
-    --secondary-foreground: 185 60% 15%;
+    --secondary-foreground: 0 0% 9%;
 
     --muted: 185 25% 75%;
-    --muted-foreground: 185 60% 25%;
+    --muted-foreground: 0 0% 35%;
 
     --accent: 158 84% 39%;
     --accent-foreground: 185 45% 95%;
