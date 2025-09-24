@@ -8,38 +8,38 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Light mode - darker sea green theme with better contrast */
-    --background: 158 60% 15%;
-    --foreground: 180 50% 95%;
+    /* Light mode - light sea green theme with better visibility */
+    --background: 158 45% 85%;
+    --foreground: 158 60% 15%;
     
-    /* Custom gradients for VertexPath Light Mode - darker sea green */
+    /* Custom gradients for VertexPath Light Mode - light sea green */
     --gradient-primary: linear-gradient(135deg, hsl(180, 85%, 45%) 0%, hsl(160, 70%, 50%) 100%);
-    --gradient-dark: linear-gradient(135deg, hsl(158, 50%, 18%) 0%, hsl(160, 45%, 22%) 100%);
-    --gradient-section: linear-gradient(135deg, hsl(158, 55%, 16%) 0%, hsl(160, 50%, 20%) 100%);
+    --gradient-dark: linear-gradient(135deg, hsl(158, 40%, 80%) 0%, hsl(160, 35%, 75%) 100%);
+    --gradient-section: linear-gradient(135deg, hsl(158, 45%, 88%) 0%, hsl(160, 40%, 82%) 100%);
 
-    --card: 158 35% 25%;
-    --card-foreground: 180 50% 95%;
+    --card: 158 35% 75%;
+    --card-foreground: 158 60% 15%;
 
-    --popover: 158 35% 25%;
-    --popover-foreground: 180 50% 95%;
+    --popover: 158 35% 75%;
+    --popover-foreground: 158 60% 15%;
 
     --primary: 180 85% 45%;
-    --primary-foreground: 158 45% 20%;
+    --primary-foreground: 158 45% 95%;
 
-    --secondary: 158 30% 30%;
-    --secondary-foreground: 180 50% 95%;
+    --secondary: 158 30% 70%;
+    --secondary-foreground: 158 60% 15%;
 
-    --muted: 158 25% 35%;
-    --muted-foreground: 180 30% 80%;
+    --muted: 158 25% 65%;
+    --muted-foreground: 158 60% 25%;
 
-    --accent: 158 30% 30%;
-    --accent-foreground: 180 50% 95%;
+    --accent: 158 30% 70%;
+    --accent-foreground: 158 60% 15%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 180 50% 95%;
+    --destructive-foreground: 158 45% 95%;
 
-    --border: 158 20% 40%;
-    --input: 158 25% 30%;
+    --border: 158 20% 60%;
+    --input: 158 25% 70%;
     --ring: 180 85% 45%;
 
     --radius: 0.5rem;
