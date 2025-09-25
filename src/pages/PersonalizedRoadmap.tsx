@@ -6,36 +6,42 @@ import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { 
-  User, 
-  Target, 
-  Calendar, 
   BookOpen, 
-  TrendingUp, 
+  Clock, 
+  Award, 
   CheckCircle, 
-  Clock,
-  Award,
-  BarChart3,
-  Star,
-  Play
+  Circle, 
+  Play,
+  ChevronRight,
+  Target
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Profile {
   id: string;
   full_name: string;
   target_job: string;
-  avatar_url: string;
-  current_status: string;
-  created_at: string;
+  skills: string;
+  experience_years: string;
+  industry: string;
 }
 
 interface LearningPath {
-  level: string;
+  level: number;
   title: string;
   description: string;
   duration: string;
   skills: string[];
-  courses: { name: string; platform: string; completed: boolean; }[];
+  courses: {
+    title: string;
+    provider: string;
+    duration: string;
+    difficulty: string;
+    completed: boolean;
+    progress?: number;
+  }[];
   progress: number;
+  completed: boolean;
 }
 
 const PersonalizedRoadmap: React.FC = () => {
@@ -44,6 +50,7 @@ const PersonalizedRoadmap: React.FC = () => {
   const [learningPaths, setLearningPaths] = useState<LearningPath[]>([]);
   const [loading, setLoading] = useState(true);
   const [overallProgress, setOverallProgress] = useState(0);
+  const [activeStep, setActiveStep] = useState(0);
 
   useEffect(() => {
     if (user) {
@@ -74,49 +81,146 @@ const PersonalizedRoadmap: React.FC = () => {
   };
 
   const generatePersonalizedPaths = (profileData: Profile) => {
-    // Generate personalized learning paths based on target job
     const mockPaths: LearningPath[] = [
       {
-        level: "Beginner",
-        title: "Foundation Skills",
-        description: "Build strong fundamentals in programming and web development",
-        duration: "3-4 months",
-        skills: ["HTML/CSS", "JavaScript Basics", "Git/GitHub", "Problem Solving"],
+        level: 1,
+        title: "Foundation Building",
+        description: "Master the fundamentals and build a strong base",
+        duration: "4-6 weeks",
+        skills: ["JavaScript Basics", "HTML/CSS", "Git Basics"],
         courses: [
-          { name: "HTML & CSS Fundamentals", platform: "freeCodeCamp", completed: true },
-          { name: "JavaScript Basics", platform: "Codecademy", completed: true },
-          { name: "Git & GitHub Essentials", platform: "Udemy", completed: false },
-          { name: "Introduction to Programming", platform: "Coursera", completed: false }
+          {
+            title: "JavaScript Fundamentals",
+            provider: "FreeCodeCamp",
+            duration: "20 hours",
+            difficulty: "Beginner",
+            completed: true,
+            progress: 100
+          },
+          {
+            title: "HTML & CSS Masterclass",
+            provider: "Udemy",
+            duration: "15 hours", 
+            difficulty: "Beginner",
+            completed: true,
+            progress: 100
+          },
+          {
+            title: "Git & GitHub Basics",
+            provider: "GitHub Learning Lab",
+            duration: "8 hours",
+            difficulty: "Beginner",
+            completed: false,
+            progress: 75
+          }
         ],
-        progress: 65
+        progress: 92,
+        completed: false
       },
       {
-        level: "Intermediate", 
-        title: "Core Development",
-        description: "Master essential frameworks and development practices",
-        duration: "4-6 months",
-        skills: ["React", "Node.js", "Databases", "REST APIs", "Testing"],
+        level: 2,
+        title: "Framework Mastery",
+        description: "Learn modern frameworks and tools",
+        duration: "6-8 weeks",
+        skills: ["React", "Node.js", "API Development"],
         courses: [
-          { name: "React Complete Guide", platform: "Udemy", completed: false },
-          { name: "Node.js Backend Development", platform: "Pluralsight", completed: false },
-          { name: "Database Design & SQL", platform: "edX", completed: false },
-          { name: "API Development", platform: "Frontend Masters", completed: false }
+          {
+            title: "React - The Complete Guide",
+            provider: "Udemy",
+            duration: "40 hours",
+            difficulty: "Intermediate",
+            completed: false,
+            progress: 60
+          },
+          {
+            title: "Node.js Backend Development",
+            provider: "Coursera",
+            duration: "25 hours",
+            difficulty: "Intermediate", 
+            completed: false,
+            progress: 30
+          },
+          {
+            title: "REST API Design",
+            provider: "Pluralsight",
+            duration: "12 hours",
+            difficulty: "Intermediate",
+            completed: false,
+            progress: 0
+          }
         ],
-        progress: 25
+        progress: 45,
+        completed: false
       },
       {
-        level: "Advanced",
-        title: "Professional Excellence", 
-        description: "Advanced concepts and industry best practices",
-        duration: "6-8 months",
-        skills: ["System Design", "Cloud Services", "DevOps", "Performance", "Security"],
+        level: 3,
+        title: "Advanced Skills",
+        description: "Develop expertise in specialized areas",
+        duration: "8-10 weeks",
+        skills: ["AWS", "Docker", "System Design"],
         courses: [
-          { name: "System Design Interview", platform: "Educative", completed: false },
-          { name: "AWS Cloud Practitioner", platform: "AWS", completed: false },
-          { name: "Docker & Kubernetes", platform: "Docker", completed: false },
-          { name: "Web Security Fundamentals", platform: "OWASP", completed: false }
+          {
+            title: "AWS Solutions Architect",
+            provider: "A Cloud Guru",
+            duration: "35 hours",
+            difficulty: "Advanced",
+            completed: false,
+            progress: 0
+          },
+          {
+            title: "Docker & Kubernetes",
+            provider: "Linux Academy",
+            duration: "20 hours",
+            difficulty: "Advanced",
+            completed: false,
+            progress: 0
+          },
+          {
+            title: "System Design Fundamentals",
+            provider: "Educative",
+            duration: "18 hours",
+            difficulty: "Advanced",
+            completed: false,
+            progress: 0
+          }
         ],
-        progress: 0
+        progress: 0,
+        completed: false
+      },
+      {
+        level: 4,
+        title: "Specialization",
+        description: "Deep dive into your target role specifics",
+        duration: "6-8 weeks",
+        skills: ["Machine Learning", "Data Analytics", "Project Management"],
+        courses: [
+          {
+            title: "Machine Learning A-Z",
+            provider: "Udemy",
+            duration: "44 hours",
+            difficulty: "Advanced",
+            completed: false,
+            progress: 0
+          },
+          {
+            title: "Data Analysis with Python",
+            provider: "DataCamp",
+            duration: "30 hours",
+            difficulty: "Intermediate",
+            completed: false,
+            progress: 0
+          },
+          {
+            title: "Agile Project Management",
+            provider: "Coursera",
+            duration: "15 hours",
+            difficulty: "Intermediate",
+            completed: false,
+            progress: 0
+          }
+        ],
+        progress: 0,
+        completed: false
       }
     ];
 
@@ -124,23 +228,28 @@ const PersonalizedRoadmap: React.FC = () => {
     
     // Calculate overall progress
     const totalProgress = mockPaths.reduce((sum, path) => sum + path.progress, 0);
-    setOverallProgress(Math.round(totalProgress / mockPaths.length));
+    const avgProgress = totalProgress / mockPaths.length;
+    setOverallProgress(Math.round(avgProgress));
+
+    // Set active step based on current progress
+    const activeIndex = mockPaths.findIndex(path => !path.completed && path.progress < 100);
+    setActiveStep(activeIndex === -1 ? mockPaths.length - 1 : activeIndex);
   };
 
   if (loading) {
     return (
-      <section className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 pt-16 flex items-center justify-center">
-        <div className="text-foreground text-xl">Loading your personalized roadmap...</div>
+      <section className="min-h-screen bg-gradient-dark pt-16 flex items-center justify-center">
+        <div className="text-white text-xl">Loading your roadmap...</div>
       </section>
     );
   }
 
   if (!profile) {
     return (
-      <section className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 pt-16 flex items-center justify-center">
+      <section className="min-h-screen bg-gradient-dark pt-16 flex items-center justify-center">
         <div className="text-center space-y-4">
-          <h2 className="text-2xl font-bold text-foreground">Complete Your Profile</h2>
-          <p className="text-muted-foreground">Please complete your profile to access your personalized roadmap.</p>
+          <h2 className="text-2xl font-bold text-white">Complete Your Profile</h2>
+          <p className="text-gray-300">Please complete your profile to access personalized roadmap.</p>
           <Button onClick={() => window.location.hash = "profile"}>
             Complete Profile
           </Button>
@@ -150,110 +259,261 @@ const PersonalizedRoadmap: React.FC = () => {
   }
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 pt-16">
+    <section className="min-h-screen bg-gradient-dark pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Your Learning Roadmap
           </h1>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Personalized learning path from beginner to expert in {profile.target_job}
+          <p className="text-gray-300 text-lg mb-6">
+            Personalized path to become a <span className="text-primary font-medium">{profile.target_job}</span>
           </p>
-        </div>
-
-        {/* Overall Progress */}
-        <Card className="bg-card/80 backdrop-blur border-border/50 mb-8">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-xl font-semibold text-foreground">Overall Progress</h3>
-                <p className="text-muted-foreground">Your journey to becoming a {profile.target_job}</p>
-              </div>
-              <div className="text-3xl font-bold text-primary">{overallProgress}%</div>
+          
+          {/* Overall Progress */}
+          <div className="max-w-md mx-auto">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm text-gray-300">Overall Progress</span>
+              <span className="text-sm text-primary font-medium">{overallProgress}%</span>
             </div>
             <Progress value={overallProgress} className="h-3" />
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        {/* Learning Paths */}
-        <div className="space-y-8">
-          {learningPaths.map((path, index) => (
-            <Card key={index} className="bg-card/80 backdrop-blur border-border/50">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                      path.level === 'Beginner' ? 'bg-green-500/20 text-green-600' :
-                      path.level === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-600' :
-                      'bg-red-500/20 text-red-600'
-                    }`}>
-                      {path.level === 'Beginner' ? '🌱' : path.level === 'Intermediate' ? '🚀' : '⭐'}
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">{path.level}: {path.title}</CardTitle>
-                      <p className="text-muted-foreground">{path.description}</p>
-                    </div>
-                  </div>
-                  <Badge variant={path.progress > 0 ? 'default' : 'secondary'}>
-                    {path.duration}
-                  </Badge>
-                </div>
-              </CardHeader>
+        {/* Horizontal Timeline */}
+        <div className="relative mb-16">
+          {/* Timeline Line */}
+          <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-600 transform -translate-y-1/2 hidden md:block">
+            <div 
+              className="h-full bg-gradient-primary transition-all duration-1000 ease-in-out"
+              style={{ width: `${(activeStep / (learningPaths.length - 1)) * 100}%` }}
+            />
+          </div>
+
+          {/* Timeline Steps */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            {learningPaths.map((path, index) => {
+              const isActive = index === activeStep;
+              const isCompleted = path.completed || path.progress === 100;
+              const isPrevious = index < activeStep;
               
-              <CardContent className="space-y-6">
-                {/* Progress */}
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className="font-medium text-foreground">{path.progress}%</span>
+              return (
+                <div 
+                  key={index}
+                  className={cn(
+                    "relative transition-all duration-500 ease-in-out transform hover:scale-105",
+                    isActive && "animate-pulse"
+                  )}
+                >
+                  {/* Timeline Node */}
+                  <div className="flex justify-center mb-4 md:mb-8">
+                    <div
+                      className={cn(
+                        "relative w-16 h-16 rounded-full border-4 flex items-center justify-center transition-all duration-300",
+                        isCompleted 
+                          ? "bg-green-500 border-green-500 text-white" 
+                          : isActive
+                          ? "bg-primary border-primary text-white"
+                          : "bg-gray-700 border-gray-600 text-gray-400"
+                      )}
+                    >
+                      {isCompleted ? (
+                        <CheckCircle className="h-6 w-6" />
+                      ) : (
+                        <span className="font-bold">{path.level}</span>
+                      )}
+                      
+                      {/* Pulse animation for active step */}
+                      {isActive && (
+                        <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-30" />
+                      )}
+                    </div>
                   </div>
-                  <Progress value={path.progress} />
-                </div>
 
-                {/* Skills */}
-                <div>
-                  <h4 className="font-medium text-foreground mb-3">Skills You'll Learn</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {path.skills.map((skill, skillIndex) => (
-                      <Badge key={skillIndex} variant="outline">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
+                  {/* Timeline Card */}
+                  <Card 
+                    className={cn(
+                      "bg-white/5 border-white/10 backdrop-blur transition-all duration-300 hover:bg-white/10",
+                      isActive && "border-primary/50 bg-primary/5"
+                    )}
+                  >
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-white text-lg flex items-center gap-2">
+                        <Target className={cn("h-4 w-4", isActive ? "text-primary" : "text-gray-400")} />
+                        {path.title}
+                      </CardTitle>
+                      <p className="text-gray-300 text-sm">{path.description}</p>
+                      <div className="flex items-center gap-2 text-xs text-gray-400">
+                        <Clock className="h-3 w-3" />
+                        {path.duration}
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className="space-y-4">
+                      {/* Progress */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-xs text-gray-300">Progress</span>
+                          <span className="text-xs text-primary font-medium">{path.progress}%</span>
+                        </div>
+                        <Progress 
+                          value={path.progress} 
+                          className="h-2"
+                        />
+                      </div>
 
-                {/* Courses */}
-                <div>
-                  <h4 className="font-medium text-foreground mb-3">Recommended Courses</h4>
-                  <div className="grid gap-3">
-                    {path.courses.map((course, courseIndex) => (
-                      <div key={courseIndex} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <div className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                            course.completed ? 'bg-green-500 text-white' : 'bg-muted text-muted-foreground'
-                          }`}>
-                            {course.completed ? <CheckCircle className="h-4 w-4" /> : <Clock className="h-4 w-4" />}
+                      {/* Skills */}
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-300">Key Skills:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {path.skills.map((skill, skillIndex) => (
+                            <Badge 
+                              key={skillIndex}
+                              variant="secondary"
+                              className="text-xs bg-primary/20 text-white border-primary/30"
+                            >
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Courses Preview */}
+                      <div className="space-y-2">
+                        <p className="text-xs text-gray-300">Courses ({path.courses.length}):</p>
+                        <div className="space-y-1">
+                          {path.courses.slice(0, 2).map((course, courseIndex) => (
+                            <div key={courseIndex} className="flex items-center gap-2 text-xs">
+                              {course.completed ? (
+                                <CheckCircle className="h-3 w-3 text-green-500" />
+                              ) : course.progress && course.progress > 0 ? (
+                                <Circle className="h-3 w-3 text-yellow-500" />
+                              ) : (
+                                <Circle className="h-3 w-3 text-gray-500" />
+                              )}
+                              <span className="text-gray-300 truncate">{course.title}</span>
+                              {course.progress && course.progress > 0 && !course.completed && (
+                                <span className="text-primary text-xs ml-auto">
+                                  {course.progress}%
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                          {path.courses.length > 2 && (
+                            <p className="text-xs text-gray-400">+{path.courses.length - 2} more</p>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Action Button */}
+                      {isActive && (
+                        <Button 
+                          size="sm" 
+                          className="w-full bg-gradient-primary hover:opacity-90 animate-fade-in"
+                          onClick={() => window.location.hash = "courses"}
+                        >
+                          <Play className="h-3 w-3 mr-1" />
+                          Continue Learning
+                        </Button>
+                      )}
+                      
+                      {isPrevious && (
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          className="w-full border-green-500/50 text-green-400 hover:bg-green-500/10"
+                          disabled
+                        >
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Completed
+                        </Button>
+                      )}
+
+                      {!isActive && !isPrevious && (
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="w-full text-gray-400 hover:text-white hover:bg-white/5"
+                          disabled
+                        >
+                          <ChevronRight className="h-3 w-3 mr-1" />
+                          Coming Soon
+                        </Button>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Detailed View of Current Level */}
+        {learningPaths[activeStep] && (
+          <Card className="bg-white/5 border-white/10 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="text-white flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                Current Focus: {learningPaths[activeStep].title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {learningPaths[activeStep].courses.map((course, index) => (
+                  <Card key={index} className="bg-white/5 border-white/10">
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between">
+                          <h4 className="font-medium text-white text-sm">{course.title}</h4>
+                          {course.completed ? (
+                            <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                          ) : (
+                            <Circle className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                          )}
+                        </div>
+                        
+                        <div className="space-y-1 text-xs text-gray-300">
+                          <div className="flex justify-between">
+                            <span>Provider:</span>
+                            <span className="text-primary">{course.provider}</span>
                           </div>
-                          <div>
-                            <p className="font-medium text-foreground">{course.name}</p>
-                            <p className="text-sm text-muted-foreground">{course.platform}</p>
+                          <div className="flex justify-between">
+                            <span>Duration:</span>
+                            <span>{course.duration}</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span>Level:</span>
+                            <Badge variant="outline" className="text-xs border-primary/30 text-primary">
+                              {course.difficulty}
+                            </Badge>
                           </div>
                         </div>
-                        {!course.completed && (
-                          <Button size="sm" variant="outline">
-                            <Play className="h-4 w-4 mr-1" />
-                            Start
-                          </Button>
+
+                        {course.progress !== undefined && course.progress > 0 && !course.completed && (
+                          <div className="space-y-1">
+                            <div className="flex justify-between items-center text-xs">
+                              <span className="text-gray-300">Progress</span>
+                              <span className="text-primary">{course.progress}%</span>
+                            </div>
+                            <Progress value={course.progress} className="h-1" />
+                          </div>
                         )}
+
+                        <Button 
+                          size="sm" 
+                          className="w-full"
+                          variant={course.completed ? "outline" : "default"}
+                        >
+                          {course.completed ? "Review" : course.progress ? "Continue" : "Start Course"}
+                        </Button>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </section>
   );

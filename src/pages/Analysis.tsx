@@ -18,6 +18,21 @@ import {
   Lightbulb,
   BookOpen
 } from "lucide-react";
+import {
+  RadarChart,
+  Radar,
+  XAxis,
+  YAxis,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  ResponsiveContainer,
+  Cell,
+  PieChart,
+  Pie,
+  BarChart,
+  Bar
+} from 'recharts';
 
 interface Profile {
   id: string;
@@ -109,6 +124,26 @@ const Analysis: React.FC = () => {
     }
   };
 
+  // Prepare data for charts
+  const radarData = skillGaps.map(skill => ({
+    skill: skill.skill,
+    current: skill.currentLevel,
+    target: skill.targetLevel,
+    fullMark: 100
+  }));
+
+  const priorityData = [
+    { name: 'High Priority', value: skillGaps.filter(s => s.priority === 'high').length, color: '#ef4444' },
+    { name: 'Medium Priority', value: skillGaps.filter(s => s.priority === 'medium').length, color: '#f59e0b' },
+    { name: 'Low Priority', value: skillGaps.filter(s => s.priority === 'low').length, color: '#10b981' },
+  ];
+
+  const courseData = [
+    { name: 'Completed', value: 65, color: '#10b981' },
+    { name: 'In Progress', value: 20, color: '#f59e0b' },
+    { name: 'Pending', value: 15, color: '#6b7280' },
+  ];
+
   if (loading) {
     return (
       <section className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 pt-16 flex items-center justify-center">
@@ -197,6 +232,137 @@ const Analysis: React.FC = () => {
                   </p>
                 </div>
                 <Award className="h-8 w-8 text-green-500" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Radar Chart - Skill Match Percentages */}
+          <Card className="bg-card/80 backdrop-blur border-border/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Skill Match Overview
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={radarData}>
+                    <PolarGrid />
+                    <PolarAngleAxis 
+                      dataKey="skill" 
+                      className="text-xs fill-muted-foreground" 
+                    />
+                    <PolarRadiusAxis 
+                      angle={0} 
+                      domain={[0, 100]}
+                      className="text-xs fill-muted-foreground"
+                    />
+                    <Radar
+                      name="Target Level"
+                      dataKey="target"
+                      stroke="hsl(var(--primary))"
+                      fill="hsl(var(--primary))"
+                      fillOpacity={0.1}
+                      strokeWidth={2}
+                    />
+                    <Radar
+                      name="Current Level"
+                      dataKey="current"
+                      stroke="hsl(var(--accent))"
+                      fill="hsl(var(--accent))"
+                      fillOpacity={0.3}
+                      strokeWidth={2}
+                    />
+                  </RadarChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Donut Chart - Priority Distribution */}
+          <Card className="bg-card/80 backdrop-blur border-border/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5" />
+                Priority Distribution
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={priorityData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={120}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {priorityData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="grid grid-cols-1 gap-2 mt-4">
+                {priorityData.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-3 h-3 rounded-full" 
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="text-sm text-muted-foreground">{item.name}</span>
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Progress Bar Chart - Course Status */}
+          <Card className="bg-card/80 backdrop-blur border-border/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                Learning Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-80">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={courseData} layout="horizontal">
+                    <XAxis type="number" domain={[0, 100]} />
+                    <YAxis dataKey="name" type="category" width={80} />
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                      {courseData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <div className="grid grid-cols-1 gap-2 mt-4">
+                {courseData.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div 
+                        className="w-3 h-3 rounded-full" 
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span className="text-sm text-muted-foreground">{item.name}</span>
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{item.value}%</span>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>

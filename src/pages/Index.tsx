@@ -33,6 +33,7 @@ import {
   Zap,
   BarChart3
 } from "lucide-react";
+import Sidebar from "@/components/Sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -257,9 +258,9 @@ const Index = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center space-y-8">
           <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-            VertexPath — Turn skills gaps into{" "}
+            VertexPath — Turns skill gaps into{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              real learning paths
+              real learning paths...
             </span>
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -594,7 +595,24 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-green-50 dark:bg-gradient-dark">
       <Navigation />
-      {renderCurrentSection()}
+      
+      {/* Sidebar for authenticated users on specific sections */}
+      {user && ["profile", "analysis", "roadmap", "courses"].includes(currentSection) && (
+        <>
+          <Sidebar 
+            currentSection={currentSection}
+            onSectionChange={handleSectionChange}
+            user={user}
+          />
+          {/* Content area with sidebar offset */}
+          <div className="md:ml-16 lg:ml-64 transition-all duration-300">
+            {renderCurrentSection()}
+          </div>
+        </>
+      )}
+      
+      {/* Regular layout for home and non-authenticated sections */}
+      {!(user && ["profile", "analysis", "roadmap", "courses"].includes(currentSection)) && renderCurrentSection()}
       
       <AuthModal 
         isOpen={isAuthModalOpen}
